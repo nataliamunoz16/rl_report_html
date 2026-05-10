@@ -40,6 +40,58 @@
   page-break-before: always;
 }
 
+.html-video-notice {
+  border: 2px solid var(--accent);
+  background: #eef5fb;
+  padding: 12px 16px;
+  margin: 0 auto 7mm auto;
+  border-radius: 8px;
+  text-align: center;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.html-video-notice h2 {
+  margin: 0 0 5px 0;
+  font-size: 13pt;
+  color: var(--accent);
+  text-transform: none;
+}
+
+.html-video-notice p {
+  margin: 4px 0;
+  text-align: center;
+  font-size: 10.5pt;
+}
+
+.html-video-notice a {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 7px 12px;
+  background: var(--accent);
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.html-video-notice a:hover {
+  background: #163a5a;
+  text-decoration: none;
+}
+
+@media print {
+  .html-video-notice {
+    background: white;
+    border: 2px solid #111;
+  }
+
+  .html-video-notice a {
+    background: white;
+    color: #111;
+    border: 1px solid #111;
+  }
+}
 .video-pair {
   width: 100%;
   margin: 1.5rem auto;
@@ -534,6 +586,18 @@
     <div class="affiliation">
       <sup>1</sup>Master in Artificial Intelligence, Universitat Politècnica de Catalunya UPC, Barcelona, Catalonia
     </div>
+    <section class="html-video-notice">
+      <h2>Online HTML version with videos</h2>
+      <p>
+        This report includes evaluation videos of the trained agents. To view the videos correctly,
+        please access the interactive HTML version of the report.
+      </p>
+      <p>
+        <a href="https://nataliamunoz16.github.io/rl_report_html/" target="_blank" rel="noopener noreferrer">
+          Open the HTML report with videos
+        </a>
+      </p>
+    </section>
 
     <div class="abstract">
       <p>
