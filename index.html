@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Off-Policy Reinforcement Learning: A Comparison of SAC and REDQ</title>
+
+  <style>
+    :root {
+      --text: #111;
+      --muted: #555;
+      --border: #d7d7d7;
+      --accent: #1f4e79;
+      --bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f2f2f2;
+      color: var(--text);
+      font-family: "Times New Roman", Times, serif;
+      font-size: 11pt;
+      line-height: 1.25;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 18px auto;
+      padding: 18mm 16mm;
+      background: var(--bg);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.16);
+    }
+.new-page {
+  break-before: page;
+  page-break-before: always;
+}
+
+.video-pair {
+  width: 100%;
+  margin: 1.5rem auto;
+  text-align: center;
+}
+
+.videos-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.videos-row video {
+  width: 45%;
+  max-width: 320px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.image-pair {
+  width: 100%;
+  margin: 1.5rem auto;
+  text-align: center;
+}
+
+.images-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.single-image {
+  width: 100%;
+  margin: 1.5rem auto;
+  text-align: center;
+}
+
+.single-image img {
+  display: block;
+  margin: 0 auto;
+  width: 70%;
+  max-width: 520px;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.single-image figcaption {
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.images-row img {
+  width: 45%;
+  max-width: 320px;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.image-pair figcaption {
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.video-pair figcaption {
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.one-column-section {
+  column-count: 1;
+  width: 100%;
+}
+
+.results-section {
+  break-before: page;
+  page-break-before: always;
+  margin-bottom: 6mm;
+}
+
+.after-results-columns {
+  break-before: page;
+  page-break-before: always;
+  column-count: 2;
+  column-gap: 7mm;
+}
+
+    .results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8.2pt;
+  margin: 2mm 0 1mm 0;
+  table-layout: fixed;
+}
+
+.results-table th,
+.results-table td {
+  border: 1px solid var(--border);
+  padding: 3px 4px;
+  text-align: center;
+  vertical-align: middle;
+  overflow-wrap: break-word;
+}
+
+.results-table th {
+  background: #f6f6f6;
+  font-weight: bold;
+}
+
+.results-table td:nth-child(1),
+
+.config-table td:nth-child(3) {
+  text-align: left;
+}
+
+.table-caption {
+  font-size: 8.5pt;
+  text-align: center;
+  margin-top: 1mm;
+  color: #333;
+}
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8mm;
+    }
+
+    .upc-logo {
+      width: 12mm;
+      height: auto;
+      display: block;
+    }
+
+    .running-title {
+      font-size: 10pt;
+      text-align: right;
+    }
+
+    .paper-title {
+      text-align: center;
+      font-size: 20pt;
+      line-height: 1.1;
+      font-weight: bold;
+      margin: 0 0 5mm 0;
+    }
+
+    .compact-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7.4pt;
+      margin: 2mm 0 1mm 0;
+      table-layout: fixed;
+    }
+
+    .compact-table th,
+    .compact-table td {
+      border: 1px solid var(--border);
+      padding: 2px 3px;
+      text-align: center;
+      vertical-align: middle;
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+
+    .compact-table th {
+      background: #f6f6f6;
+      font-weight: bold;
+    }
+
+    .compact-table td:nth-child(2),
+    .compact-table th:nth-child(2) {
+      text-align: left;
+    }
+
+    .table-caption {
+      font-size: 8.2pt;
+      text-align: center;
+      margin-top: 1mm;
+      color: #333;
+    }
+
+    .authors {
+      text-align: center;
+      font-size: 11pt;
+      margin-bottom: 2mm;
+    }
+
+    .affiliation {
+      text-align: center;
+      font-size: 10pt;
+      color: var(--muted);
+      margin-bottom: 8mm;
+    }
+
+    .abstract {
+      margin-bottom: 6mm;
+      font-size: 10.5pt;
+    }
+
+    .abstract strong {
+      font-style: italic;
+    }
+    .columns {
+      column-count: 2;
+      column-gap: 7mm;
+      column-rule: none;
+    }
+
+    section {
+      margin-bottom: 5mm;
+    }
+
+    h2 {
+      font-size: 11pt;
+      text-align: center;
+      margin: 5mm 0 2mm 0;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    h3 {
+      font-size: 11pt;
+      margin: 3mm 0 1.5mm 0;
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    h4 {
+      font-size: 10.5pt;
+      margin: 2mm 0 1mm 0;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 0 0 2.5mm 0;
+      text-align: justify;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+    figure {
+      margin: 4mm 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+
+    figure img,
+    figure video {
+      max-width: 100%;
+      border: 1px solid var(--border);
+      display: block;
+      margin: 0 auto;
+    }
+
+    figure video {
+      background: #000;
+    }
+
+    figcaption {
+      font-size: 10pt;
+      margin-top: 1.5mm;
+      text-align: center;
+    }
+
+    .video-link {
+      font-size: 9.5pt;
+      text-align: center;
+      margin-top: 1mm;
+    }
+
+    .full-width {
+      column-span: all;
+      margin: 5mm 0;
+    }
+
+    .pseudocode {
+      background-color: #f6f6f6;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 8.5pt;
+      line-height: 1.25;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      margin: 3mm 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .pseudocode code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin: 3mm 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 4px 5px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-weight: bold;
+      background: #f6f6f6;
+    }
+
+    code {
+      background-color: #f1f1f1;
+      padding: 2px 2px;
+      border-radius: 2px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.80em;
+      border: 1px solid #d9d9d9;
+    }
+
+    code.type-code {
+      background-color: transparent;
+      color: #000;
+      border: none;
+      padding: 0;
+      font-family: Consolas, "Courier New", monospace;
+      font-style: italic;
+      font-weight: bold;
+    }
+    .references {
+      font-size: 9.5pt;
+      padding-left: 0;
+      list-style-position: inside;
+    }
+
+    .references li {
+      margin-bottom: 1.8mm;
+      text-align: left;
+    }
+    .algorithm-box {
+      margin: 4mm 0;
+      border: 1px solid #bfbfbf;
+      background: #ffffff;
+      font-size: 8.8pt;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .algorithm-title {
+      background: #f0f0f0;
+      border-bottom: 1px solid #bfbfbf;
+      padding: 5px 7px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .algorithm-section {
+      padding: 5px 7px 2px 7px;
+      font-weight: bold;
+      font-style: italic;
+      color: #222;
+    }
+
+    .algorithm-box pre {
+      margin: 0;
+      padding: 4px 7px 7px 7px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 8.3pt;
+      line-height: 1.28;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      background: transparent;
+    }
+
+    .algorithm-box code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .algorithm-box .formula {
+      font-style: italic;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 9.5pt;
+    }
+    .formula-center {
+      text-align: center;
+      margin: 2mm 0;
+    }
+
+    .formula {
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    @page {
+      size: A4;
+      margin: 16mm;
+    }
+
+    @media print {
+    body {
+      background: white;
+    }
+
+    .page {
+      width: auto;
+      min-height: auto;
+      margin: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    video {
+      border: 1px solid var(--border);
+    }
+
+    .new-page,
+    .results-section,
+    .after-results-columns {
+      break-before: page;
+      page-break-before: always;
+    }
+  }
+
+    @media screen and (max-width: 900px) {
+      .page {
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none;
+      }
+
+      .columns {
+        column-count: 1;
+      }
+
+      .top-header {
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .upc-logo {
+        width: 120px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="top-header">
+      <img class="upc-logo" src="images/upc_logo.png" alt="UPC logo" />
+      <div class="running-title">Reinforcement Learning</div>
+    </header>
+
+    <h1 class="paper-title">Off-Policy Reinforcement Learning:<br />A Comparison of SAC and REDQ</h1>
+
+    <div class="authors">Natalia Muñoz Moruno<sup>1</sup></div>
+    <div class="affiliation">
+      <sup>1</sup>Master in Artificial Intelligence, Universitat Politècnica de Catalunya UPC, Barcelona, Catalonia
+    </div>
+
+    <div class="abstract">
+      <p>
+        <strong>Abstract—</strong>
+        Replace this text with your abstract. Briefly describe the goal of the project, the algorithms compared,
+        the environments used, the experimental setup, and the most relevant conclusions.
+      </p>
+    </div>
+
+    <div class="columns">
+      <section id="introduction">
+        <h2>I. Introduction</h2>
+        <p>
+          Off-policy reinforcement learning is a type of reinforcement learning in which the agent can learn from data collected by a policy different from the one currently being optimized. This is especially useful as it allows the storage of past experiences and its reuse, improving sample efficiency. Instead of discarding the transitions at each iteration, off-policy methods store transitions in a replay buffer and sample batches from it to update the policy of the agent.
+        </p>
+        <p>
+          This project focuses on two off-policy actor-critic algorithms, the Soft Actor-Critic (SAC) [1] and the Randomized Ensembled Double Q-learning (REDQ) [2]. Both algorithms are designed to use a stochastic policy with Q-value functions. SAC uses two Q-networks to reduce overestimation bias and includes an entropy term in the objective to encourage exploration. REDQ extends this idea by using an ensemble of Q-networks and performing several gradient updates in each interaction with the environment.
+        </p>
+        <p>
+          The algorithms are evaluated on two environments: Pendulum-v1 [3] and PandaReachDense-v3 [4]. Pendulum-v1 is a classical continuous control benchmark, while PandaReachDense-v3 is a robotic reaching task that represents a more complex goal-based control problem. To use the same training pipeline for both environments, several wrappers were applied.
+        </p>
+        <p>
+          The experimental setup compares SAC and REDQ under different hyperparameter configurations, each trained on both environments for 100,000 steps and with 3 different random seeds, to obtain more reliable results.
+        </p>
+
+        
+      </section>
+
+      <section id="methodology">
+        <h2>II. Methodology</h2>
+
+        <h3>A. Environments</h3>
+        <h4>1) Pendulum-v1</h4>
+        <p>
+          Pendulum-v1 [3] is a classic control environment from Gymnasium. It represents the inverted pendulum swing-up problem, a task from control theory. The environment consist of a pendulum attached to a fixed point, where the free end can move under the effect of an applied torque. The goal of the agent is to learn how to apply torque to swing the pendulum upwards and keep it in the upright position.
+        </p>
+        <p>
+          This environment is useful for evaluating continuous control algorithms since the agent must output a continuous torque value. The action space has shape (1,) with values between -2.0 and 2.0, with negative values corresponding to torque applied in opposite directions.
+        </p>
+        <p>
+          The observation space has shape (3,) and contains three values:
+          <span class="math-vector">[cos(θ), sin(θ), dθ/dt]</span>.
+          These correspond to the cosine and sine of the pendulum angle and the angular velocity, which is bounded between -8.0 and 8.0.
+        </p>
+        <p>
+          The reward function penalizes three aspects:
+          <ol>
+            <li>The distance from the upright position</li>
+            <li>The angular velocity</li>
+            <li>The magnitude of the torque applied</li>
+          </ol>
+          And is represented by the following formula:
+          <div class="math-center">
+            <span class="math-vector">
+              r = -(θ<sup>2</sup> + 0.1 · θ<sub>dt</sub><sup>2</sup> + 0.001 · torque<sup>2</sup>)
+            </span>
+          </div>
+          Therefore, the best possible reward is 0, which occurs when the pendulum is upright with zero angular velocity and no torque is needed.
+        </p>
+        <figure>
+          <video autoplay loop muted playsinline controls preload="auto">
+            <source src="videos/pendulum.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+
+          <figcaption>Figure 1: Example of pendulum behavior. Extracted from [3].</figcaption>
+        </figure>
+        
+        <h4>2) PandaReachDense-v3</h4>
+        <p>
+          PandaReachDense-v3 [4] is a robotic control environment from PandaGym, a Gymnasium-compatible benchmark based on the Franka Emika Panda robot. PandaGym includes several robotic manipulation tasks, such as reaching, pushing, sliding, pick and place, stacking and flipping. In this project the selected task is <strong>reach</strong>, where the robot needs to move to a target position.
+        </p>
+        <p>
+          In PandaReachDense-v3, the agent controls the robot using end-effector displacement control, which means that the action does not represent individual joint movements, but instead corresponds to the displacement applied to the robot end-effector. The goal is to learn a policy that moves the end-effector as close as possible to the desired target.
+        </p>
+        <p>
+          The environment uses a dense reward function, which provides a gradual feedback during learning instead of only receiving a reward when the task is completed. In PandaGym, dense rewards are designed in a way in which the closer the agent is to complete the task, the higher the reward is.
+        </p>
+        <p>
+          The observation space is a dictionary with achieved_goal, desired goal, and observation, which includes the end-effector position and velocity [5]. In this project, the dictionary observation is flattened into a single vector before being passed to the SAC and REDQ networks, to keep the same neural network structure for both environments.
+        </p>
+        <p>
+          Compared with Pendulum-v1, PandaReachDense-v3 represents a more complex and more realistic control problem, that involves robotic movement.
+        </p>
+        <figure>
+          <video autoplay loop muted playsinline controls preload="auto">
+            <source src="videos/replay.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+
+          <figcaption>Figure 2: Example of PandaReachDense-v3 behavior. Extracted from [4].</figcaption>
+        </figure>
+
+        <h4>3) Wrappers</h4>
+        <p>
+          Several wrappers were used to preprocess the environments, make them compatible with the SAC and REDQ models and with the two environments.
+        </p>
+        <p>
+          The first wrapper is the <code>FlattenobservationWrapper</code>. This wrapper converts the environment observation into a flat numpy array. This is especially important for PandaGym environments, in which as mentioned, the observations are returned as a dictionary containing fields such as achieved_goal, desired_goal and observation.
+        </p>
+        <p>
+          The second wrapper is the <code>DtypeobservationWrapper</code>, which converts all observations to <code class="type-code">float32</code>, ensuring consistency between the environment output and the Pytorch models.
+        </p>
+        <p>
+          The <code>RescaleWrapper</code> is used to normalize the action space. The agent produces actions in the range <code class="type-code">[-1,1]</code>, and this wrapper rescales them to the real action range of each environment.
+        </p>
+        <p>
+          Finally, the <code>EpisodeinfoWrapper</code> tracks the total reward and the length of each episode. When an episode finishes, it stores this information in the <code class="type-code">info</code> dictionary.
+        </p>
+        <h3>B. Models</h3>
+        <p>
+          The implemented models are based on off-policy actor-critic reinforcement learning. Both SAC and REDQ use a repplay buffer to store transitions in the form: <code class="type-code">(state, action, reward, next_state, done)</code>. These transitions are samples in mini batches to update the neural networks, making the models off-policy, as they are able to learn from previous experiences.
+        </p>
+        <p>
+          Both models also share the same policy and critic architectures. The policy is a Gaussian stochastic policy that receives the current state and outputs the mean and log standar deviation of a Gaussian distribution. Next, an action is sampled from this distribution, passed through a <code class="type-code">tahn</code> function to keep it bounded and then rescaled to the action range from the environment.
+        </p>
+        <p>
+          The critic is implemented as a Q-network that receives the state and action concatenated and outputs a scalar estimation of the <code class="type-code">Q(s,a)</code>, that represents the expected return of taking action <code class="type-code">a</code> in the state <code class="type-code">s</code> and then following the policy.
+        </p>
+        <h4>1) SAC</h4>
+        <p>
+          Soft Actor-Critic (SAC) [1] is an off-policy actor-critic reinforcement learning algorithm. It is based on the maximum entropy framework, meaning that the policy is trained to maximize the expected reward and the expected entropy, which encourages exploration. SAC combines three main ideas: an actor-critic architecture, off-policy learning and entropy maximization. According to [1] this combination improves sample efficiency, stability, and performance compare with previous on-policy and off-policy methods.
+        </p>
+        <p>
+          Specifically, in this implementation, the SAC agent contains:
+          <ul>
+            <li>One Gaussian policy network</li>
+            <li>Two Q-networks: Q<sub>1</sub> and Q<sub>2</sub></li>
+            <li>Two target Q-networks: Q<sub>1</sub>_target and Q<sub>2</sub>_target</li>
+            <li>One optimizer for the policy</li>
+            <li>One optimizer for each Q-network</li>
+          </ul>
+        </p>
+        <p>
+          The target Q-networks are initialized with the same weights as the online Q-networks and are updated slowly using the following soft updates:
+        </p>
+        <p class="formula-center">
+          <span class="formula">
+            target_param = τ · online_param + (1 - τ) · target_param
+          </span>
+        </p>
+        <p>
+          Making the target values more stable during training.
+        </p>
+        <p>
+          During each update, a batch of transitions is sampled from the replay buffer and the target Q-value is computed using the next action sampled from the current policy and the minimum value predicted by the two target Q-networks:
+        </p>
+        <p class="formula-center">
+          <span class="formula multiline">
+            target_q = reward + &gamma; · (1 - done) ·<br>
+            <span class="formula-indent">
+              (min(Q<sub>1,target</sub>, Q<sub>2,target</sub>)
+            </span><br>
+            <span class="formula-indent">
+              - &alpha; · log_prob)
+            </span>
+          </span>
+        </p>
+        <p>
+          Then both Q-networks are trained using mean squared error between the predictions and the target Q-value. After that the policy is updated by sampling new actions and maximizing the predicted Q-value while also considering the entropy term:
+        </p>
+        <p class="formula-center">
+          <span class="formula">
+            policy_loss = mean(&alpha; · log_prob - min_q)
+          </span>
+        </p>
+        <p>
+        Finally, the target networks are softly updated.
+        </p>
+        <p>
+          The pseudocode can be seen below:
+        </p>
+<div class="algorithm-box">
+  <div class="algorithm-title">Algorithm 1: Soft Actor-Critic pseudocode</div>
+
+  <div class="algorithm-section">Initialization</div>
+  <pre><code>Initialize Gaussian policy π
+Initialize Q-networks Q<sub>1</sub> and Q<sub>2</sub>
+Initialize target networks Q<sub>1</sub>_target and Q<sub>2</sub>_target
+Initialize replay buffer D</code></pre>
+
+  <div class="algorithm-section">Training loop</div>
+  <pre><code>For each environment step:
+  if step &lt; start_steps:
+    Select a random action
+  else:
+    Sample action from policy π
+
+  Execute action in the environment
+  Store transition in replay buffer D
+
+  if episode ends:
+    Reset environment
+
+  if update condition is satisfied:
+    for each gradient update:
+      Sample a batch from D
+
+      Sample next action from π(next_state)
+      Compute log probability
+      <span class="formula">target_q = reward + &gamma; · (1 - done) ·</span>
+      <span class="formula">           (min(Q<sub>1</sub>_target, Q<sub>2</sub>_target) - &alpha; · log_prob)</span>
+
+      Update Q<sub>1</sub> and Q<sub>2</sub> using MSE loss
+
+      Sample new action from π(state)
+      <span class="formula">policy_loss = &alpha; · log_prob - min(Q<sub>1</sub>, Q<sub>2</sub>)</span>
+
+      Update policy network
+      Soft update target networks</code></pre>
+</div>
+        <p>
+          To validate the performance of the custom SAC implementation, it was compared against the SAC implementation from Stable-Baselines3 [6] on the Pendulum-v1 environment (see <code>validationSAC.py</code>). Both models were trained using equivalent hyperparameters, such as the same learning rate, the same discount factor or the same replay buffer size. After training, both agents were evaluated using deterministic actions over 10 independent episodes with different random seeds, ensuring that these episodes were different from the ones used for training. Finally, the mean and standard deviation of the episode returns were saved for both models and plotted with error bars. This comparison provides a reference about if the custom SAC is capable of achieving similar performance to a well-established library implementation.
+        </p>
+        <h4>2) REDQ</h4>
+        <p>
+          Randomized Ensembled Double Q-learning (REDQ) [2] is also an off-policy actor-critic algorithm. It is closely related to SAC, but modifies the critic part by using an ensemble of several Q-networks. This ensemble is combined with a high update-to-data (UTD) ratio, meaning that the agent performs several gradient updates per environment interacion. As a result, REDQ can learn more from each collected transition, improving sample efficiency. 
+        </p>
+        <p>
+          However, using a high UTD ratio can lead to unstable or biased Q-value estimates. To reduce te overestimation bias, REDQ uses a random subset of Q-networks when computing the target value. In this implementation, the algorithm randomly selects <code>M</code> Q-networks from an ensemble of <code>N</code> Q-networks and uses the minimum value, reducing overestimation and still taking advantage from the ensemble. The three main REDQ hyperparameters are therefore the UTD ratio <code>G</code>, the ensemble size <code>N</code>, and the subset of size <code>M</code>.
+        </p>
+        <p>
+          In this implementation the REDQ agent contains:
+          <ul>
+            <li>One Gaussian policy network</li>
+            <li>An ensemble of N Q-networks</li>
+            <li>An ensemble of N target Q-networks</li>
+            <li>One optimizer for the policy</li>
+            <li>One optimizer for each Q-network</li>
+          </ul>
+        </p>
+        <p>
+          As in SAC, during each update, a batch is sampled from the replay buffer. Then the next action is sampled from the policy, a random subset of <code>M</code> target networks is selected and the target value is computed using the minimum value from this subset:
+        </p>
+        <p class="formula-center">
+          <span class="formula multiline">
+            target_q = reward + &gamma; · (1 - done) ·<br>
+            <span class="formula-indent">
+              (min(selected Q_targets) - &alpha; · log_prob)
+            </span><br>
+          </span>
+        </p>
+        <p>
+          After computing the target, all Q-networks are updated using the same target value. Finally, the policy is updated evaluating the new sampled action using the mean Q-value of the ensemble in the policy loss.
+        </p>
+<div class="algorithm-box">
+  <div class="algorithm-title">Algorithm 2: REDQ pseudocode</div>
+
+  <div class="algorithm-section">Initialization</div>
+  <pre><code>Initialize Gaussian policy π
+Initialize an ensemble of N Q-networks
+Initialize an ensemble of N target Q-networks
+Initialize replay buffer D</code></pre>
+
+  <div class="algorithm-section">Training loop</div>
+  <pre><code>For each environment step:
+  if step &lt; start_steps:
+    Select a random action
+  else:
+    Sample action from policy π
+
+  Execute action in the environment
+  Store transition in replay buffer D
+
+  if episode ends:
+    Reset environment
+
+  if update condition is satisfied:
+    for g = 1 to G:
+      Sample a batch from D
+
+      Sample next action from π(next_state)
+      Compute log probability
+
+      Randomly select M target Q-networks
+      <span class="formula">target_q = reward + &gamma; · (1 - done) ·</span>
+      <span class="formula">           (min(selected Q_targets) - &alpha; · log_prob)</span>
+
+      for each Q-network in the ensemble:
+        Update Q-network using MSE loss
+
+      Soft update all target Q-networks
+
+      Sample new action from π(state)
+      Evaluate action using all Q-networks
+      Compute mean Q-value of the ensemble
+
+      <span class="formula">policy_loss = &alpha; · log_prob - mean_q</span>
+
+      Update policy network
+</code></pre>
+</div>
+        <h3>C. Training Settings</h3>
+        <h4>1) General parameters</h4>
+        <p>
+          All experiments were performed using the same general training pipeline for both SAC and REDQ algoeithms. These were evaluated on two environments: Pendulum-v1 and PandaReachDense-v3. Each experiment was trained for 100,000 environment steps, and each condifiguration was repeated using three different random seeds: 0,1 and 2, reducing dependency on random initialization.
+        </p>
+        <p>
+          The environments were created using a common function (see <code>make_env</code>). This function applied the same wrappers to all environments: observations were flattened, converted to float32, actions were rescaled and episode information was tracked.
+        </p>
+        <p>
+          At the beginning of training, random actions were used for the first 10,000 steps to fill the replay buffer and encourage initial exploration, after that actions were selected using the learned stochastic policy. Network updates started after 1,000 steps, with the replay buffer containing enough examples from a batch. The replay buffer size was 1,000,000 transitions, the batch size was 256, the discount factor was 0.99 and the soft target update coefficient was 0.005.
+        </p>
+        <p>
+          During training, the episode return, length and loss values were logged. These logs were saved into CSV files and the trained policy was stored as a checkpoint.
+        </p>
+        <h4>2) Hyperparameter tuning</h4>
+        <p>
+          Several hyperparameter variations were tested for both SAC and REDQ (see Tables 1 and 2).
+        </p>
+
+<figure>
+  <table class="compact-table">
+    <thead>
+      <tr>
+        <th>Config</th>
+        <th>Changed parameter</th>
+        <th>LR</th>
+        <th>alpha</th>
+        <th>Batch</th>
+        <th>Hidden</th>
+        <th>Upd. every</th>
+        <th>Updates</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>SAC-0</td><td>Baseline</td><td>3e-4</td><td>0.2</td><td>256</td><td>256</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-1</td><td>Learning rate &darr;</td><td>1e-4</td><td>0.2</td><td>256</td><td>256</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-2</td><td>Learning rate &uarr;</td><td>5e-4</td><td>0.2</td><td>256</td><td>256</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-3</td><td>Entropy coeff. &darr;</td><td>3e-4</td><td>0.1</td><td>256</td><td>256</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-4</td><td>Entropy coeff. &uarr;</td><td>3e-4</td><td>0.3</td><td>256</td><td>256</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-5</td><td>Batch size &darr;</td><td>3e-4</td><td>0.2</td><td>128</td><td>256</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-6</td><td>Batch size &uarr;</td><td>3e-4</td><td>0.2</td><td>512</td><td>256</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-7</td><td>Network size &darr;</td><td>3e-4</td><td>0.2</td><td>256</td><td>128</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-8</td><td>Network size &uarr;</td><td>3e-4</td><td>0.2</td><td>256</td><td>512</td><td>50</td><td>50</td></tr>
+      <tr><td>SAC-9</td><td>Update schedule</td><td>3e-4</td><td>0.2</td><td>256</td><td>256</td><td>1</td><td>1</td></tr>
+      <tr><td>SAC-10</td><td>Update schedule</td><td>3e-4</td><td>0.2</td><td>256</td><td>256</td><td>10</td><td>10</td></tr>
+    </tbody>
+  </table>
+
+  <figcaption class="table-caption">
+    Table 1: SAC hyperparameter configurations used in the experiments.
+  </figcaption>
+</figure>
+
+<figure>
+  <table class="compact-table">
+    <thead>
+      <tr>
+        <th>Config</th>
+        <th>Changed parameter</th>
+        <th>LR</th>
+        <th>alpha</th>
+        <th>Batch</th>
+        <th>Hidden</th>
+        <th>N</th>
+        <th>M</th>
+        <th>G</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>REDQ-0</td><td>Baseline</td><td>3e-4</td><td>0.2</td><td>256</td><td>256</td><td>10</td><td>2</td><td>20</td></tr>
+      <tr><td>REDQ-1</td><td>Learning rate &darr;</td><td>1e-4</td><td>0.2</td><td>256</td><td>256</td><td>10</td><td>2</td><td>20</td></tr>
+      <tr><td>REDQ-2</td><td>Subset size M &uarr;</td><td>3e-4</td><td>0.2</td><td>256</td><td>256</td><td>10</td><td>5</td><td>20</td></tr>
+      <tr><td>REDQ-3</td><td>Ensemble size N &darr;</td><td>3e-4</td><td>0.2</td><td>256</td><td>256</td><td>5</td><td>2</td><td>20</td></tr>
+      <tr><td>REDQ-4</td><td>UTD ratio G &darr;</td><td>3e-4</td><td>0.2</td><td>256</td><td>256</td><td>10</td><td>2</td><td>5</td></tr>
+    </tbody>
+  </table>
+
+  <figcaption class="table-caption">
+    Table 2: REDQ hyperparameter configurations used in the experiments.
+  </figcaption>
+</figure>
+
+        <p>
+          The SAC experiments start from a baseline configuration with learning rate 3e-4, entropy coefficient 0.2, batch size 256, hidden dimension 256, update frequency 50, and 50 gradient updates. The following configurations modify one aspect at a time: the learning rate, entropy coefficient, batch size, network size and update schedule (see Table 1).
+        </p>
+        <p>
+          The REDQ experiments also start from a baseline configuration with learning rate 3e-4, entropy coefficient 0.2, batch size 256, hidden dimension 256, an ensemble of 10 Q-networks, a target subset size of 2, and 20 gradient updates. The tested variations modify the learning rate, the subset size, the ensemble size and the UTD ratio.
+        </p>
+        <p>
+          It should be mentioned that although the SAC uses 50 gradient updates per phase and REDQ uses 20, REDQ updates much more frequently. SAC performs 50 updates every 50 environment steps, corresponding to approximately one update per step, while REDQ performs 20 updates at every step.
+        </p>
+        <h4>3) Random baseline</h4>
+        <p>
+          Apart from the experiments, a random baseline was used as a reference to evaluate if SAC and REDQ agents learned meaningful policies (see <code>random_baseline.py</code>). Instead of training an agent, the baseline selects actions randomly from the environment action space. It was evaluated on the same environments and seeds used in the main experiments. For each seed, the random policy was tested over 10 evaluation episodes using shifted seeds obtaining reproducible episodes different from the ones used for training. During evaluation, the episode return and episode length were recorded, and the final results were saved in CSV files.
+        </p>
+      
+      </section>
+    </div>
+      <section id="results">
+        <h2>III. Results</h2>
+        <h3>A. SAC validation</h3>
+        <p>
+          Figure 3 compares the final evaluation performance of the custom SAC implementation againts the Stable-Baselines3 SAC implementation on Pendulum-v1.
+        </p>
+        <figure class="single-image">
+          <img src="images/validation.png" 
+              alt="Final performance comparison between custom SAC and Stable-Baselines3 SAC">
+
+          <figcaption>
+            Figure 3: Final evaluation performance of the custom SAC implementation compared with the Stable-Baselines3 SAC baseline on Pendulum-v1. Both models were trained for 30,000 environment steps using comparable hyperparameters and evaluated over 10 deterministic episodes. Bars represent the mean evaluation return, and error bars indicate the standard deviation across evaluation episodes.
+          </figcaption>
+        </figure>
+        <h3>B. Hyperparameter tuning</h3>
+        <h4>1) SAC</h4>
+        <p>
+          The SAC configuration results averaged over three seeds can be seen in Table 3.
+        </p>
+
+<figure>
+  <table class="results-table config-table">
+    <thead>
+      <tr>
+        <th>Environment</th>
+        <th>Config</th>
+        <th>Changed parameter</th>
+        <th>Final return mean</th>
+        <th>Final return std</th>
+        <th>Best episode return</th>
+        <th>Mean episode return</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PandaReachDense-v3</td><td>SAC-0</td><td>Baseline</td><td>-6.71</td><td>0.38</td><td>-0.010</td><td>-7.81</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-1</td><td>Learning rate &darr;</td><td>-8.32</td><td>0.42</td><td>-0.018</td><td>-8.40</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-2</td><td>Learning rate &uarr;</td><td>-6.79</td><td>0.37</td><td>-0.013</td><td>-7.73</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-3</td><td>Entropy coefficient &darr;</td><td><strong>-5.59</strong></td><td>0.08</td><td>-0.006</td><td>-5.38</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-4</td><td>Entropy coefficient &uarr;</td><td>-7.77</td><td>0.83</td><td>-0.019</td><td>-9.00</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-5</td><td>Batch size &darr;</td><td>-6.52</td><td>0.33</td><td>-0.019</td><td>-7.70</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-6</td><td>Batch size &uarr;</td><td>-7.01</td><td>0.15</td><td>-0.010</td><td>-7.62</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-7</td><td>Network size &darr;</td><td>-6.73</td><td>0.35</td><td>-0.020</td><td>-7.72</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-8</td><td>Network size &uarr;</td><td>-7.30</td><td>0.47</td><td>-0.017</td><td>-7.81</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-9</td><td>Update schedule, G=1</td><td>-6.62</td><td>0.37</td><td>-0.015</td><td>-7.93</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-10</td><td>Update schedule, G=10</td><td>-6.85</td><td>0.24</td><td>-0.017</td><td>-7.67</td></tr>
+
+      <tr><td>Pendulum-v1</td><td>SAC-0</td><td>Baseline</td><td>-159.91</td><td>15.16</td><td>-0.74</td><td>-248.23</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-1</td><td>Learning rate &darr;</td><td>-160.16</td><td>14.91</td><td>-0.62</td><td>-252.74</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-2</td><td>Learning rate &uarr;</td><td>-159.92</td><td>14.92</td><td>-0.96</td><td>-247.98</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-3</td><td>Entropy coefficient &darr;</td><td>-159.82</td><td>15.05</td><td>-0.81</td><td>-247.84</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-4</td><td>Entropy coefficient &uarr;</td><td>-160.35</td><td>15.52</td><td>-0.98</td><td>-249.13</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-5</td><td>Batch size &darr;</td><td>-160.07</td><td>15.02</td><td>-0.76</td><td>-248.52</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-6</td><td>Batch size &uarr;</td><td>-159.77</td><td>15.12</td><td>-0.91</td><td>-248.04</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-7</td><td>Network size &darr;</td><td>-161.04</td><td>13.57</td><td>-0.75</td><td>-249.49</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-8</td><td>Network size &uarr;</td><td><strong>-159.38</strong></td><td>15.06</td><td>-0.83</td><td>-247.87</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-9</td><td>Update schedule, G=1</td><td>-160.19</td><td>15.43</td><td>-0.84</td><td>-248.06</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-10</td><td>Update schedule, G=10</td><td>-160.03</td><td>15.50</td><td>-0.84</td><td>-248.40</td></tr>
+    </tbody>
+  </table>
+
+  <figcaption class="table-caption">
+    Table 3: SAC configuration results averaged over three seeds. Higher final return indicates better performance.
+  </figcaption>
+</figure>
+      <p>
+        Figure 4 compares the top three SAC configurations for both environments. The configurations were selected based on their final performance, measured as the mean return over the last 10 episodes and averaged across seeds.
+      </p>
+<figure class="image-pair">
+  <div class="images-row">
+    <img src="images/Pendulum-v1_sac_top3_learning_curves.png" alt="SAC agent on Pendulum-v1">
+
+    <img src="images/PandaReachDense-v3_sac_top3_learning_curves.png" alt="SAC agent on PandaReachDense-v3">
+  </div>
+
+  <figcaption>
+    Figure 4: Top three SAC learning curves for PandaReachDense-v3 and Pendulum-v1. 
+  Configurations were selected using the highest mean final return over the last 
+  10 episodes across seeds. The curves show smoothed episode returns, with shaded 
+  regions indicating variability across seeds.
+  </figcaption>
+</figure>
+      <h4>2) REDQ</h4>
+      <p>
+        The REDQ configuration results averaged over three seeds can be seen in Table 4.
+      </p>
+      <p>
+        Figure 5 compares the top three REDQ configurations for both environments. The configurations were selected based on their final performance, measured as the mean return over the last 10 episodes and averaged across seeds.
+      </p>
+<figure class="image-pair">
+  <div class="images-row">
+    <img src="images/Pendulum-v1_sac_top3_learning_curves.png" alt="SAC agent on Pendulum-v1">
+
+    <img src="images/PandaReachDense-v3_sac_top3_learning_curves.png" alt="SAC agent on PandaReachDense-v3">
+  </div>
+
+  <figcaption>
+    Figure 5: Top three REDQ learning curves for PandaReachDense-v3 and Pendulum-v1. 
+  Configurations were selected using the highest mean final return over the last 
+  10 episodes across seeds. The curves show smoothed episode returns, with shaded 
+  regions indicating variability across seeds.
+  </figcaption>
+</figure>
+
+      <h3>C. Best configurations per model</h3>
+      <h4>1) SAC</h4>
+      <p>
+        The best SAC configuration for each environment based on the higher final return mean, can be seen in Table 5.
+      </p>
+
+
+<figure>
+  <table class="results-table config-table">
+    <thead>
+      <tr>
+        <th>Environment</th>
+        <th>Best SAC config</th>
+        <th>Changed parameter</th>
+        <th>Final return mean</th>
+        <th>Final return std</th>
+        <th>Best episode return</th>
+        <th>Mean episode return</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PandaReachDense-v3</td>
+        <td>SAC-3</td>
+        <td>Entropy coefficient &darr;</td>
+        <td>-5.59</td>
+        <td>0.08</td>
+        <td>-0.006</td>
+        <td>-5.38</td>
+      </tr>
+      <tr>
+        <td>Pendulum-v1</td>
+        <td>SAC-8</td>
+        <td>Network size &uarr;</td>
+        <td>-159.38</td>
+        <td>15.06</td>
+        <td>-0.83</td>
+        <td>-247.87</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figcaption class="table-caption">
+    Table 5: Best SAC configuration for each environment, selected according to the highest final return mean. Results are averaged over three seeds.
+  </figcaption>
+  <p>
+        Figure 6 shows an evaluation videos of the trained agent, on the different environments, using the best configuration.
+        <figure class="video-pair">
+          <div class="videos-row">
+            <video controls autoplay muted loop playsinline>
+              <source src="videos/Pendulum-v1_sac-episode-0.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+
+            <video controls autoplay muted loop playsinline>
+              <source src="videos/PandaReachDense-v3_sac-episode-6.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+          <figcaption>
+            Figure 6: Evaluation episode of the best SAC agent on Pendulum-v1 and PandaReachDense-v3 environments.
+        </figure>
+  </p>
+</figure>
+      <h4>2) REDQ</h4>
+      <p>
+        The best REDQ configuration for each environment, selected according to the highest final return mean can be seen in Table 6.
+      </p>
+
+      <p>
+        Figure 7 shows an evaluation videos of the REDQ trained agent, on the different environments, using the best configuration.
+        <figure class="video-pair">
+          <div class="videos-row">
+            <video controls autoplay muted loop playsinline>
+              <source src="videos/Pendulum-v1_sac-episode-0.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+
+            <video controls autoplay muted loop playsinline>
+              <source src="videos/PandaReachDense-v3_sac-episode-6.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+          <figcaption>
+            Figure 7: Evaluation episode of the best REDQ agent on Pendulum-v1 and PandaReachDense-v3 environments.
+        </figure>
+  </p>
+
+      <h3>D. SAC vs REDQ</h3>
+      <p>
+        The summary performance in training SAC vs REDQ can be seen in Table 7.
+      </p>
+      <h4>1) Best SAC vs REDQ learning curves</h4>
+      <p>
+        The best learning curves for each of the environments and each of the models, can be seen in Figure 8.
+      </p>
+
+      <h4>2) Validation</h4>
+      <p>
+        Due to computational constraints, validation was performed only on the best-performing SAC and REDQ configurations selected from the training results. The selected models were chosen based on their final training performance and were then evaluated separately using deterministic policy execution, without further parameter updates (see Table 8).
+      </p>
+
+      <h3>E. Random baseline</h3>
+      <p>
+        Table 9 reports the performance of a random policy used as a baseline. The random baseline was evaluated on both environments using the same seeds as the main experiments and with 10 evaluation episodes per seed.
+      </p>
+<figure>
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th>Environment</th>
+        <th>Model</th>
+        <th>Mean return</th>
+        <th>Std return across seeds</th>
+        <th>Mean episode length</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PandaReachDense-v3</td>
+        <td>Random</td>
+        <td>-8.23</td>
+        <td>1.11</td>
+        <td>40.13</td>
+      </tr>
+      <tr>
+        <td>Pendulum-v1</td>
+        <td>Random</td>
+        <td>-1351.63</td>
+        <td>56.03</td>
+        <td>200.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figcaption class="table-caption">
+    Table 9: Random baseline evaluation results averaged over three seeds. For each seed, the random policy was evaluated over 10 episodes. The mean return and mean episode length are reported per environment.
+  </figcaption>
+</figure>
+
+
+      </section>
+      <div class="columns after-results-columns">
+        <section id="discussion">
+        <h2>IV. Discussion</h2>
+        <h3>A. SAC validation</h3>
+        <p>
+          Discuss the differences observed between SAC and REDQ. Mention stability, sample efficiency, sensitivity to
+          hyperparameters, and possible reasons for the behavior observed in each environment.
+        </p>
+        <h3>B. Hyperparameter tuning</h3>
+        <h3>C. Best configurations per model</h3>
+        <h3>D. SAC vs REDQ</h3>
+        <h3>E. Random Baseline</h3>
+      </section>
+
+      <section id="conclusion">
+        <h2>V. Conclusion</h2>
+        <p>
+          Summarize the main findings of the project. State which algorithm performed better in each environment and
+          what could be improved in future work.
+        </p>
+      </section>
+
+      <section id="code-specifications">
+        <h2>VI. Code Specifications</h2>
+        <p>
+          The code used for the experiments and the obtained results are available in the following repository:
+          <a href="https://github.com/nataliamunoz16/RL-task1.git" target="_blank" rel="noopener noreferrer">GitHub repository</a>.
+        </p>
+      </section>
+
+      <section id="references">
+        <h2>References</h2>
+        <ol class="references">
+          <li>
+            T. Haarnoja, A. Zhou, P. Abbeel, and S. Levine, “Soft actor-critic:
+            Off-policy maximum entropy deep reinforcement learning with a
+            stochastic actor,” in International conference on machine learning.
+            Pmlr, 2018, pp. 1861-1870.
+          </li>
+          <li>
+            X. Chen, C. Wang, Z. Zhou, and K. W. Ross, “Randomized
+            ensembled double q-learning: Learning fast without a model,”
+            CoRR, vol. abs/2101.05982, 2021. [Online]. Available: https:
+            //arxiv.org/abs/2101.05982
+          </li>
+          <li>
+            Farama Foundation, “Gymnasium Documentation: Pendulum,”
+            https ://gymnasium.farama.org/environments/classic_control/
+            pendulum.html, n.d., retrieved May 8, 2026.
+          </li>
+          <li>
+            panda-gym, “Environments — panda-gym v3.0.8 documentation,”
+            https://panda-gym.readthedocs.io/en/latest/usage/environments.
+            html, n.d., retrieved May 8, 2026.
+          </li>
+          <li>
+            Units/en/unit6/hands-on.Mdx at main · huggingface/deep-rl-class. (n.d.).
+          </li>
+          <li>
+            SAC — Stable Baselines3 2.9.0a2 documentation. (n.d.). Readthedocs.Io. Retrieved May 9, 2026, from https://stable-baselines3.readthedocs.io/en/master/modules/sac.html
+          </li>
+        </ol>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
