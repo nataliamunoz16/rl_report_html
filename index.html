@@ -1240,13 +1240,29 @@ Initialize replay buffer D</code></pre>
         <h2>IV. Discussion</h2>
         <h3>A. SAC validation</h3>
         <p>
-          Discuss the differences observed between SAC and REDQ. Mention stability, sample efficiency, sensitivity to
-          hyperparameters, and possible reasons for the behavior observed in each environment.
+          The validation results (see Figure 3), whoe that the custom SAC implementation achieves a similar performance compared to the Stable-Baselines3 SAC on Pendulum-v1. This suggests that the main components of the implementation such as the twin Q-networks, replay buffer and target updates are working correctly. Although small differences appear, thes can be due to implementation details and train stochasticity.
         </p>
         <h3>B. Hyperparameter tuning</h3>
-        <h3>C. Best configurations per model</h3>
-        <h3>D. SAC vs REDQ</h3>
-        <h3>E. Random Baseline</h3>
+        <p>
+          The SAC hyperparameter tuning (see Table 3 and 5), shows different behaviours depending on the environment. On one hand, in PandaReachDense-v3 environment, the entropy coefficient had the strongest effect, reducing it produced the best final return (-5.59) and the lowest variability across seeds. This finding suggests that in this robotic task, a lower entropy weight helped the policy to exploit successful actions more effectively, while increasing the entropy coeddicient, worsened performance. Regarding the learning rate, it is seen that when reducing it the final return worsens, while when increasing its value with respect to the baseline, similar results are obtained. This suggests that the lower learning rate may have slowed down learning too much. In the case of the batch size and network size, small effects are seen. Decreasing the batch size slightly improved the final return, while increasing it worsened the behavior. Reducing the network size gave a result very close to the baseline, while increasing it degraded the performance. Finally, the update schedule also had a limited effect. Using smaller and more frequent updates gave a result slightly better than the baseline, while G=10 was close to the baseline but did not improved.
+        </p>
+        <p>
+          On the other hand, results on the Pendulum-v1 environment, show smaller differences between SAC configurations. Most final returns were close to -160, indicating that the task was less sensitive to hyperparameters. The best results were obtained with an increased network size, but the improvement over the baseline was small. Therefore, for Pendulum-v1 the baseline SAC already performed competitively, while PandaReachDense-v3 required more carefuly tuning, maybe due to the increased complexity of the problem.
+        </p>
+        <p>
+          Figure 4 shows that the top SAC configurations behave differently depending on the environment. In Pendulum-v1, the three best configurations almost overlap during most of the training process. After the initial exploration phase, all curves quickly improve. This confirms that SAC is quite robust in Pendulum-v1 environment and that the tested hyperparameter changes had only a small effect.
+        </p>
+        <p>
+          In PandaReachDense-v3 more differences are observed. SAC-3 which uses a lower entropy coefficient achieves the best learning curve, remaining above the other configurations after the first steps. SAC-5 and SAC-9 also improve over time but they show lower final performance.
+        </p>
+        <p>
+          The evaluation videos in Figure 6 show the behavior learned by the best SAC agent. In Pendulum-v1, the agent performs quite well, swinging the pendulum up and keeping almost in the upright position. In PandaReachDense-v3, the performance is not that notable. The robot arm moves to the target, but the task does not appear to be solved succesfully. This supports the idea that PandaReachDense-v3 is a more challenging environment which may require longer training.
+        </p>
+        <span style="color: red;">Explain table 4 ; Explain figure 5; Explain Figure 7; Brief comparison</span>
+        <h3>C. SAC vs REDQ</h3>
+        <span style="color: red;">Explain table 7 ; Explain figure 8; Explain Table 8</span>
+        <h3>D. Random Baseline</h3>
+        <span style="color: red;">Compare Table 8 vs Table 9</span>
       </section>
 
       <section id="conclusion">
