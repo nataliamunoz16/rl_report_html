@@ -1017,39 +1017,37 @@ Initialize replay buffer D</code></pre>
         <th>Changed parameter</th>
         <th>Final return mean</th>
         <th>Final return std</th>
-        <th>Best episode return</th>
-        <th>Mean episode return</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>PandaReachDense-v3</td><td>SAC-0</td><td>Baseline</td><td>-6.71</td><td>0.38</td><td>-0.010</td><td>-7.81</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-1</td><td>Learning rate &darr;</td><td>-8.32</td><td>0.42</td><td>-0.018</td><td>-8.40</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-2</td><td>Learning rate &uarr;</td><td>-6.79</td><td>0.37</td><td>-0.013</td><td>-7.73</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-3</td><td>Entropy coefficient &darr;</td><td><strong>-5.59</strong></td><td>0.08</td><td>-0.006</td><td>-5.38</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-4</td><td>Entropy coefficient &uarr;</td><td>-7.77</td><td>0.83</td><td>-0.019</td><td>-9.00</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-5</td><td>Batch size &darr;</td><td>-6.52</td><td>0.33</td><td>-0.019</td><td>-7.70</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-6</td><td>Batch size &uarr;</td><td>-7.01</td><td>0.15</td><td>-0.010</td><td>-7.62</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-7</td><td>Network size &darr;</td><td>-6.73</td><td>0.35</td><td>-0.020</td><td>-7.72</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-8</td><td>Network size &uarr;</td><td>-7.30</td><td>0.47</td><td>-0.017</td><td>-7.81</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-9</td><td>Update schedule, G=1</td><td>-6.62</td><td>0.37</td><td>-0.015</td><td>-7.93</td></tr>
-      <tr><td>PandaReachDense-v3</td><td>SAC-10</td><td>Update schedule, G=10</td><td>-6.85</td><td>0.24</td><td>-0.017</td><td>-7.67</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-0</td><td>Baseline</td><td>-6.71</td><td>0.38</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-1</td><td>Learning rate &darr;</td><td>-8.32</td><td>0.42</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-2</td><td>Learning rate &uarr;</td><td>-6.79</td><td>0.37</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-3</td><td>Entropy coefficient &darr;</td><td><strong>-5.59</strong></td><td>0.08</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-4</td><td>Entropy coefficient &uarr;</td><td>-7.77</td><td>0.83</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-5</td><td>Batch size &darr;</td><td>-6.52</td><td>0.33</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-6</td><td>Batch size &uarr;</td><td>-7.01</td><td>0.15</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-7</td><td>Network size &darr;</td><td>-6.73</td><td>0.35</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-8</td><td>Network size &uarr;</td><td>-7.30</td><td>0.47</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-9</td><td>Update schedule, G=1</td><td>-6.62</td><td>0.37</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>SAC-10</td><td>Update schedule, G=10</td><td>-6.85</td><td>0.24</td></tr>
 
-      <tr><td>Pendulum-v1</td><td>SAC-0</td><td>Baseline</td><td>-159.91</td><td>15.16</td><td>-0.74</td><td>-248.23</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-1</td><td>Learning rate &darr;</td><td>-160.16</td><td>14.91</td><td>-0.62</td><td>-252.74</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-2</td><td>Learning rate &uarr;</td><td>-159.92</td><td>14.92</td><td>-0.96</td><td>-247.98</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-3</td><td>Entropy coefficient &darr;</td><td>-159.82</td><td>15.05</td><td>-0.81</td><td>-247.84</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-4</td><td>Entropy coefficient &uarr;</td><td>-160.35</td><td>15.52</td><td>-0.98</td><td>-249.13</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-5</td><td>Batch size &darr;</td><td>-160.07</td><td>15.02</td><td>-0.76</td><td>-248.52</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-6</td><td>Batch size &uarr;</td><td>-159.77</td><td>15.12</td><td>-0.91</td><td>-248.04</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-7</td><td>Network size &darr;</td><td>-161.04</td><td>13.57</td><td>-0.75</td><td>-249.49</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-8</td><td>Network size &uarr;</td><td><strong>-159.38</strong></td><td>15.06</td><td>-0.83</td><td>-247.87</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-9</td><td>Update schedule, G=1</td><td>-160.19</td><td>15.43</td><td>-0.84</td><td>-248.06</td></tr>
-      <tr><td>Pendulum-v1</td><td>SAC-10</td><td>Update schedule, G=10</td><td>-160.03</td><td>15.50</td><td>-0.84</td><td>-248.40</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-0</td><td>Baseline</td><td>-159.91</td><td>15.16</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-1</td><td>Learning rate &darr;</td><td>-160.16</td><td>14.91</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-2</td><td>Learning rate &uarr;</td><td>-159.92</td><td>14.92</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-3</td><td>Entropy coefficient &darr;</td><td>-159.82</td><td>15.05</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-4</td><td>Entropy coefficient &uarr;</td><td>-160.35</td><td>15.52</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-5</td><td>Batch size &darr;</td><td>-160.07</td><td>15.02</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-6</td><td>Batch size &uarr;</td><td>-159.77</td><td>15.12</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-7</td><td>Network size &darr;</td><td>-161.04</td><td>13.57</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-8</td><td>Network size &uarr;</td><td><strong>-159.38</strong></td><td>15.06</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-9</td><td>Update schedule, G=1</td><td>-160.19</td><td>15.43</td></tr>
+      <tr><td>Pendulum-v1</td><td>SAC-10</td><td>Update schedule, G=10</td><td>-160.03</td><td>15.50</td></tr>
     </tbody>
   </table>
 
   <figcaption class="table-caption">
-    Table 3: SAC configuration results averaged over three seeds. Higher final return indicates better performance.
+    Table 3: SAC configuration results averaged over three seeds. Higher final return indicates better performance. The best configuration for each environment is highlighted in bold.
   </figcaption>
 </figure>
       <p>
@@ -1073,18 +1071,46 @@ Initialize replay buffer D</code></pre>
       <p>
         The REDQ configuration results averaged over three seeds can be seen in Table 4.
       </p>
+<figure>
+  <table class="results-table config-table">
+    <thead>
+      <tr>
+        <th>Environment</th>
+        <th>Config</th>
+        <th>Changed parameter</th>
+        <th>Final return mean</th>
+        <th>Final return std</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>PandaReachDense-v3</td><td>REDQ-0</td><td>Baseline</td><td>-21.01</td><td>24.01</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>REDQ-1</td><td>Learning rate &darr;</td><td>-7.29</td><td>0.18</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>REDQ-2</td><td>Number of critics sampled M &uarr;</td><td>-7.09</td><td>0.50</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>REDQ-3</td><td>Ensemble size N &darr;</td><td>-7.21</td><td>0.07</td></tr>
+      <tr><td>PandaReachDense-v3</td><td>REDQ-4</td><td>Update-to-data ratio G &darr;</td><td><strong>-6.88</strong></td><td>0.08</td></tr>
+
+      <tr><td>Pendulum-v1</td><td>REDQ-0</td><td>Baseline</td><td>-152.55</td><td>11.30</td></tr>
+      <tr><td>Pendulum-v1</td><td>REDQ-1</td><td>Learning rate &darr;</td><td><strong>-142.29</strong></td><td>30.01</td></tr>
+      <tr><td>Pendulum-v1</td><td>REDQ-2</td><td>Number of critics sampled M &uarr;</td><td>-175.89</td><td>29.80</td></tr>
+      <tr><td>Pendulum-v1</td><td>REDQ-3</td><td>Ensemble size N &darr;</td><td>-151.00</td><td>34.19</td></tr>
+      <tr><td>Pendulum-v1</td><td>REDQ-4</td><td>Update-to-data ratio G &darr;</td><td>-146.05</td><td>10.92</td></tr>
+    </tbody>
+  </table>
+
+  <figcaption class="table-caption">
+    Table 4: REDQ configuration results averaged over three seeds. Higher final return indicates better performance. The best configuration for each environment is highlighted in bold.
+  </figcaption>
+</figure>
       <p>
-        Figure 5 compares the top three REDQ configurations for both environments. The configurations were selected based on their final performance, measured as the mean return over the last 10 episodes and averaged across seeds.
+        Figure 5 compares the top three REDQ configurations for PandaReachDense-v3 environment. The configurations were selected based on their final performance, measured as the mean return over the last 10 episodes and averaged across seeds.
       </p>
 <figure class="image-pair">
   <div class="images-row">
-    <img src="images/Pendulum-v1_sac_top3_learning_curves.png" alt="SAC agent on Pendulum-v1">
-
-    <img src="images/PandaReachDense-v3_sac_top3_learning_curves.png" alt="SAC agent on PandaReachDense-v3">
+    <img src="images/PandaReachDense-v3_redq_top3_learning_curves.png" alt="SAC agent on PandaReachDense-v3">
   </div>
 
   <figcaption>
-    Figure 5: Top three REDQ learning curves for PandaReachDense-v3 and Pendulum-v1. 
+    Figure 5: Top three REDQ learning curves for PandaReachDense-v3 environment. 
   Configurations were selected using the highest mean final return over the last 
   10 episodes across seeds. The curves show smoothed episode returns, with shaded 
   regions indicating variability across seeds.
@@ -1107,8 +1133,6 @@ Initialize replay buffer D</code></pre>
         <th>Changed parameter</th>
         <th>Final return mean</th>
         <th>Final return std</th>
-        <th>Best episode return</th>
-        <th>Mean episode return</th>
       </tr>
     </thead>
     <tbody>
@@ -1118,8 +1142,6 @@ Initialize replay buffer D</code></pre>
         <td>Entropy coefficient &darr;</td>
         <td>-5.59</td>
         <td>0.08</td>
-        <td>-0.006</td>
-        <td>-5.38</td>
       </tr>
       <tr>
         <td>Pendulum-v1</td>
@@ -1127,8 +1149,6 @@ Initialize replay buffer D</code></pre>
         <td>Network size &uarr;</td>
         <td>-159.38</td>
         <td>15.06</td>
-        <td>-0.83</td>
-        <td>-247.87</td>
       </tr>
     </tbody>
   </table>
@@ -1160,18 +1180,50 @@ Initialize replay buffer D</code></pre>
       <p>
         The best REDQ configuration for each environment, selected according to the highest final return mean can be seen in Table 6.
       </p>
+<figure>
+  <table class="results-table config-table">
+    <thead>
+      <tr>
+        <th>Environment</th>
+        <th>Best REDQ config</th>
+        <th>Changed parameter</th>
+        <th>Final return mean</th>
+        <th>Final return std</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PandaReachDense-v3</td>
+        <td>REDQ-4</td>
+        <td>Update-to-data ratio &darr;</td>
+        <td>-6.88</td>
+        <td>0.08</td>
+      </tr>
+      <tr>
+        <td>Pendulum-v1</td>
+        <td>REDQ-1</td>
+        <td>Learning rate &darr;</td>
+        <td>-142.29</td>
+        <td>30.01</td>
+      </tr>
+    </tbody>
+  </table>
 
+  <figcaption class="table-caption">
+    Table 6: Best REDQ configuration for each environment, selected according to the highest final return mean. Results are averaged over three seeds.
+  </figcaption>
+</figure>
       <p>
         Figure 7 shows an evaluation videos of the REDQ trained agent, on the different environments, using the best configuration.
         <figure class="video-pair">
           <div class="videos-row">
             <video controls autoplay muted loop playsinline>
-              <source src="videos/Pendulum-v1_sac-episode-0.mp4" type="video/mp4">
+              <source src="videos/Pendulum-v1_redq-episode-3.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
 
             <video controls autoplay muted loop playsinline>
-              <source src="videos/PandaReachDense-v3_sac-episode-6.mp4" type="video/mp4">
+              <source src="videos/PandaReachDense-v3_redq-episode-6.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
           </div>
@@ -1185,16 +1237,112 @@ Initialize replay buffer D</code></pre>
       <p>
         The summary performance in training SAC vs REDQ can be seen in Table 7.
       </p>
+<figure>
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th>Environment</th>
+        <th>Best SAC config</th>
+        <th>SAC final return</th>
+        <th>SAC std</th>
+        <th>Best REDQ config</th>
+        <th>REDQ final return</th>
+        <th>REDQ std</th>
+        <th>REDQ − SAC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PandaReachDense-v3</td>
+        <td>SAC-3</td>
+        <td>-5.59</td>
+        <td>0.08</td>
+        <td>REDQ-4</td>
+        <td>-6.88</td>
+        <td>0.08</td>
+        <td>-1.28</td>
+      </tr>
+      <tr>
+        <td>Pendulum-v1</td>
+        <td>SAC-8</td>
+        <td>-159.38</td>
+        <td>15.06</td>
+        <td>REDQ-1</td>
+        <td>-142.29</td>
+        <td>30.01</td>
+        <td>17.09</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figcaption class="table-caption">
+    Table 7: Best SAC and REDQ configurations selected for each environment according to the final return during training. The final return is averaged across seeds, and the standard deviation reflects variability across seeds. The last column shows the difference between REDQ and SAC performance, where positive values indicate better REDQ performance and negative values indicate better SAC performance.
+  </figcaption>
+</figure>
       <h4>1) Best SAC vs REDQ learning curves</h4>
       <p>
-        The best learning curves for each of the environments and each of the models, can be seen in Figure 8.
+        The best learning curves for the PandaReachDense-v3 environment and each of the models, can be seen in Figure 8.
       </p>
+<figure class="image-pair">
+  <div class="images-row">
+    <img src="images/PandaReachDense-v3_best_learning_curve.png" alt="SAC agent on PandaReachDense-v3">
+  </div>
 
+  <figcaption>
+    Figure 8: Top learning curves for PandaReachDense-v3 environment.
+  </figcaption>
+</figure>
       <h4>2) Validation</h4>
       <p>
         Due to computational constraints, validation was performed only on the best-performing SAC and REDQ configurations selected from the training results. The selected models were chosen based on their final training performance and were then evaluated separately using deterministic policy execution, without further parameter updates (see Table 8).
       </p>
+<figure>
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th>Environment</th>
+        <th>Model</th>
+        <th>Mean return</th>
+        <th>Std return across seeds</th>
+        <th>Mean episode length</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>PandaReachDense-v3</td>
+        <td>REDQ</td>
+        <td>-6.33</td>
+        <td>0.12</td>
+        <td>50.00</td>
+      </tr>
+      <tr>
+        <td>PandaReachDense-v3</td>
+        <td>SAC</td>
+        <td>-5.21</td>
+        <td>0.19</td>
+        <td>50.00</td>
+      </tr>
+      <tr>
+        <td>Pendulum-v1</td>
+        <td>REDQ</td>
+        <td>-180.23</td>
+        <td>12.78</td>
+        <td>200.00</td>
+      </tr>
+      <tr>
+        <td>Pendulum-v1</td>
+        <td>SAC</td>
+        <td>-177.10</td>
+        <td>12.89</td>
+        <td>200.00</td>
+      </tr>
+    </tbody>
+  </table>
 
+  <figcaption class="table-caption">
+    Table 8: Validation results of the best SAC and REDQ configurations averaged over three seeds. For each seed, the selected trained policy was evaluated over 10 episodes using deterministic actions. The mean return and mean episode length are reported per environment and model.
+  </figcaption>
+</figure>
       <h3>E. Random baseline</h3>
       <p>
         Table 9 reports the performance of a random policy used as a baseline. The random baseline was evaluated on both environments using the same seeds as the main experiments and with 10 evaluation episodes per seed.
@@ -1257,6 +1405,18 @@ Initialize replay buffer D</code></pre>
         </p>
         <p>
           The evaluation videos in Figure 6 show the behavior learned by the best SAC agent. In Pendulum-v1, the agent performs quite well, swinging the pendulum up and keeping almost in the upright position. In PandaReachDense-v3, the performance is not that notable. The robot arm moves to the target, but the task does not appear to be solved succesfully. This supports the idea that PandaReachDense-v3 is a more challenging environment which may require longer training.
+        </p>
+        <p>
+          The REDQ hyperparameter tuning results, shown in Table 4 and Table 6, reveal different behaviors depending on the environment. In PandaReachDense-v3, the baseline configuration performed poorly, with a final return of -21.01 and a very large standard deviation, indicating inestability. All the modified configurations clearly improved the results, suggesting that REDQ is quite sensitive to its hyperparameters in considerably difficult scenarios. The best result for this environment, was obtained with configuration 4, where the update-to-data ratio was reduced. This configuration obtained a final return of -6.88 with a very low standard deviation, showing better performance and a higher stability compared to the baseline. This suggests that the original REDQ UTD ratio may have been too aggresive for the environment. The learning rate reduction also produced a considerable improvement with respect the baseline, reaching a final return of -7.29. Increasing the number of sampled critics also improved the results, reaching -7.09. Overall, for PandaReachDense-v3, all modifications improved the baseline, but the most significant factor was the UTD ratio.
+        </p>
+        <p>
+          For Pendulum-v1, a different behavior is observed. The baseline achieves a reasonable final return and the differences between other configurations are smaller. The best result was obtained reducing the learning rate, achieving a final return of -142.29. However, its standard deviation was relatively high (30.01), indicating that the improvement was not completely stable across seeds. Reducing the UTD ratio also improved over the baseline, reaching -146.05 with a lower standard deviation compared to the best configuration (see REDQ-1). Reducing the ensemble size gave a result close to the baseline, while increasing the number of sampled critics clearly worsened the performance. This may indicate that using a larger subset of critics makes the target estimation less effective on this environment.
+        </p>
+        <p>
+          Overall, REDQ appears to be more sensitive to hyperparameter changes than SAC, especially in PandaReachDense-v3. In this environment, the baseline REDQ was unstable and reducing UTD ratio was necessary to obtain a more stable performance. For Pendulum-v1 the baseline was already competitive. This suggests that REDQ can benefit from tuning, but its optimal parameters depend on the environment.
+        </p>
+        <p>
+          Figure 5 shows that the top three REDQ configurations in PandaReachDense-v3, follow a similar learning pattern, improving quickly during the first part of training and then moving to more stable values.
         </p>
         <span style="color: red;">Explain table 4 ; Explain figure 5; Explain Figure 7; Brief comparison</span>
         <h3>C. SAC vs REDQ</h3>
