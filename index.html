@@ -602,7 +602,7 @@
     <div class="abstract">
       <p>
         <strong>Abstract-</strong>
-        This project compares two off-policy actor-critic reinforcement learning algorithms, Soft Actor-Critic (SAC) and Randomized Ensembled Double Q-Learning (REDQ), on two environments: Pendulum-v1 and PandaReachDense-v3. Both algorithms were implemented trained using different hyperparameter configurations, using 3 random seeds and 100,000 training steps per experiment. The results show that both algorithms learned meaningful policies outperforming the random baseline. SAC showed a more robust behavior across experiments and achieved the best validation performance. REDQ obtained a strong training performance in Pendulum-v1 but was more sensitive to hyperparameter tuning, especially to the update-to-data ratio. Overall, the results show that SAC provides a more stable performance, while REDQ could benefit from a wider hyperparameter search.
+        This project compares two off-policy actor-critic reinforcement learning algorithms, Soft Actor-Critic (SAC) and Randomized Ensembled Double Q-Learning (REDQ), on two environments: Pendulum-v1 and PandaReachDense-v3. Both algorithms were trained using different hyperparameter configurations, using 3 random seeds and 100,000 training steps per experiment. The results show that both algorithms learned meaningful policies outperforming the random baseline. SAC showed a more robust behavior across experiments and achieved the best validation performance. REDQ obtained a strong training performance in Pendulum-v1 but was more sensitive to hyperparameter tuning, especially to the update-to-data ratio. Overall, the results show that SAC provides a more stable performance, while REDQ could benefit from a wider hyperparameter search.
       </p>
     </div>
 
@@ -631,7 +631,7 @@
         <h3>A. Environments</h3>
         <h4>1) Pendulum-v1</h4>
         <p>
-          Pendulum-v1 [3] is a classic control environment from Gymnasium. It represents the inverted pendulum swing-up problem, a task from control theory. The environment consist of a pendulum attached to a fixed point, where the free end can move under the effect of an applied torque. The goal of the agent is to learn how to apply torque to swing the pendulum upwards and keep it in the upright position.
+          Pendulum-v1 [3] is a classic control environment from Gymnasium. It represents the inverted pendulum swing-up problem, a task from control theory. The environment consists of a pendulum attached to a fixed point, where the free end can move under the effect of an applied torque. The goal of the agent is to learn how to apply torque to swing the pendulum upwards and keep it in the upright position.
         </p>
         <p>
           This environment is useful for evaluating continuous control algorithms since the agent must output a continuous torque value. The action space has shape (1,) with values between -2.0 and 2.0, with negative values corresponding to torque applied in opposite directions.
@@ -695,7 +695,7 @@
           Several wrappers were used to preprocess the environments, make them compatible with the SAC and REDQ models and with the two environments.
         </p>
         <p>
-          The first wrapper is the <code>FlattenobservationWrapper</code>. This wrapper converts the environment observation into a flat numpy array. This is especially important for PandaGym environments, in which as mentioned, the observations are returned as a dictionary containing fields such as achieved_goal, desired_goal and observation.
+          The first wrapper is the <code>FlattenobservationWrapper</code>. This wrapper converts the environment observation into a flat NumPy array. This is especially important for PandaGym environments, in which as mentioned, the observations are returned as a dictionary containing fields such as achieved_goal, desired_goal and observation.
         </p>
         <p>
           The second wrapper is the <code>DtypeobservationWrapper</code>, which converts all observations to <code class="type-code">float32</code>, ensuring consistency between the environment output and the Pytorch models.
@@ -708,17 +708,17 @@
         </p>
         <h3>B. Models</h3>
         <p>
-          The implemented models are based on off-policy actor-critic reinforcement learning. Both SAC and REDQ use a repplay buffer to store transitions in the form: <code class="type-code">(state, action, reward, next_state, done)</code>. These transitions are samples in mini batches to update the neural networks, making the models off-policy, as they are able to learn from previous experiences.
+          The implemented models are based on off-policy actor-critic reinforcement learning. Both SAC and REDQ use a replay buffer to store transitions in the form: <code class="type-code">(state, action, reward, next_state, done)</code>. These transitions are sampled in mini batches to update the neural networks, making the models off-policy, as they are able to learn from previous experiences.
         </p>
         <p>
-          Both models also share the same policy and critic architectures. The policy is a Gaussian stochastic policy that receives the current state and outputs the mean and log standar deviation of a Gaussian distribution. Next, an action is sampled from this distribution, passed through a <code class="type-code">tahn</code> function to keep it bounded and then rescaled to the action range from the environment.
+          Both models also share the same policy and critic architectures. The policy is a Gaussian stochastic policy that receives the current state and outputs the mean and log standard deviation of a Gaussian distribution. Next, an action is sampled from this distribution, passed through a <code class="type-code">tahn</code> function to keep it bounded and then rescaled to the action range from the environment.
         </p>
         <p>
           The critic is implemented as a Q-network that receives the state and action concatenated and outputs a scalar estimation of the <code class="type-code">Q(s,a)</code>, that represents the expected return of taking action <code class="type-code">a</code> in the state <code class="type-code">s</code> and then following the policy.
         </p>
         <h4>1) SAC</h4>
         <p>
-          Soft Actor-Critic (SAC) [1] is an off-policy actor-critic reinforcement learning algorithm. It is based on the maximum entropy framework, meaning that the policy is trained to maximize the expected reward and the expected entropy, which encourages exploration. SAC combines three main ideas: an actor-critic architecture, off-policy learning and entropy maximization. According to [1] this combination improves sample efficiency, stability, and performance compare with previous on-policy and off-policy methods.
+          Soft Actor-Critic (SAC) [1] is an off-policy actor-critic reinforcement learning algorithm. It is based on the maximum entropy framework, meaning that the policy is trained to maximize the expected reward and the expected entropy, which encourages exploration. SAC combines three main ideas: an actor-critic architecture, off-policy learning and entropy maximization. According to [1] this combination improves sample efficiency, stability, and performance compared with previous on-policy and off-policy methods.
         </p>
         <p>
           Specifically, in this implementation, the SAC agent contains:
@@ -813,10 +813,10 @@ Initialize replay buffer D</code></pre>
         </p>
         <h4>2) REDQ</h4>
         <p>
-          Randomized Ensembled Double Q-learning (REDQ) [2] is also an off-policy actor-critic algorithm. It is closely related to SAC, but modifies the critic part by using an ensemble of several Q-networks. This ensemble is combined with a high update-to-data (UTD) ratio, meaning that the agent performs several gradient updates per environment interacion. As a result, REDQ can learn more from each collected transition, improving sample efficiency. 
+          Randomized Ensembled Double Q-learning (REDQ) [2] is also an off-policy actor-critic algorithm. It is closely related to SAC, but modifies the critic part by using an ensemble of several Q-networks. This ensemble is combined with a high update-to-data (UTD) ratio, meaning that the agent performs several gradient updates per environment interaction. As a result, REDQ can learn more from each collected transition, improving sample efficiency. 
         </p>
         <p>
-          However, using a high UTD ratio can lead to unstable or biased Q-value estimates. To reduce te overestimation bias, REDQ uses a random subset of Q-networks when computing the target value. In this implementation, the algorithm randomly selects <code>M</code> Q-networks from an ensemble of <code>N</code> Q-networks and uses the minimum value, reducing overestimation and still taking advantage from the ensemble. The three main REDQ hyperparameters are therefore the UTD ratio <code>G</code>, the ensemble size <code>N</code>, and the subset of size <code>M</code>.
+          However, using a high UTD ratio can lead to unstable or biased Q-value estimates. To reduce the overestimation bias, REDQ uses a random subset of Q-networks when computing the target value. In this implementation, the algorithm randomly selects <code>M</code> Q-networks from an ensemble of <code>N</code> Q-networks and uses the minimum value, reducing overestimation and still taking advantage from the ensemble. The three main REDQ hyperparameters are therefore the UTD ratio <code>G</code>, the ensemble size <code>N</code>, and the subset of size <code>M</code>.
         </p>
         <p>
           In this implementation the REDQ agent contains:
@@ -840,7 +840,7 @@ Initialize replay buffer D</code></pre>
           </span>
         </p>
         <p>
-          After computing the target, all Q-networks are updated using the same target value. Finally, the policy is updated evaluating the new sampled action using the mean Q-value of the ensemble in the policy loss.
+          After computing the target, all Q-networks are updated using the same target value. Finally, the policy is updated by evaluating the new sampled action using the mean Q-value of the ensemble in the policy loss.
         </p>
 <div class="algorithm-box">
   <div class="algorithm-title">Algorithm 2: REDQ pseudocode</div>
@@ -892,13 +892,13 @@ Initialize replay buffer D</code></pre>
         <h3>C. Training Settings</h3>
         <h4>1) General parameters</h4>
         <p>
-          All experiments were performed using the same general training pipeline for both SAC and REDQ algoeithms. These were evaluated on two environments: Pendulum-v1 and PandaReachDense-v3. Each experiment was trained for 100,000 environment steps, and each condifiguration was repeated using three different random seeds: 0,1 and 2, reducing dependency on random initialization.
+          All experiments were performed using the same general training pipeline for both SAC and REDQ algorithms. These were evaluated on two environments: Pendulum-v1 and PandaReachDense-v3. Each experiment was trained for 100,000 environment steps, and each configuration was repeated using three different random seeds: 0,1 and 2, reducing dependency on random initialization.
         </p>
         <p>
           The environments were created using a common function (see <code>make_env</code>). This function applied the same wrappers to all environments: observations were flattened, converted to float32, actions were rescaled and episode information was tracked.
         </p>
         <p>
-          At the beginning of training, random actions were used for the first 10,000 steps to fill the replay buffer and encourage initial exploration, after that actions were selected using the learned stochastic policy. Network updates started after 1,000 steps, with the replay buffer containing enough examples from a batch. The replay buffer size was 1,000,000 transitions, the batch size was 256, the discount factor was 0.99 and the soft target update coefficient was 0.005.
+          At the beginning of training, random actions were used for the first 10,000 steps to fill the replay buffer and encourage initial exploration, after that, actions were selected using the learned stochastic policy. Network updates started after 1,000 steps, with the replay buffer containing enough examples from a batch. The replay buffer size was 1,000,000 transitions, the batch size was 256, the discount factor was 0.99 and the soft target update coefficient was 0.005.
         </p>
         <p>
           During training, the episode return, length and loss values were logged. These logs were saved into CSV files and the trained policy was stored as a checkpoint.
@@ -991,7 +991,7 @@ Initialize replay buffer D</code></pre>
         <h2>III. Results</h2>
         <h3>A. SAC validation</h3>
         <p>
-          Figure 3 compares the final evaluation performance of the custom SAC implementation againts the Stable-Baselines3 SAC implementation on Pendulum-v1.
+          Figure 3 compares the final evaluation performance of the custom SAC implementation against the Stable-Baselines3 SAC implementation on Pendulum-v1.
         </p>
         <figure class="single-image">
           <img src="images/validation.png" 
@@ -1119,7 +1119,7 @@ Initialize replay buffer D</code></pre>
       <h3>C. Best configurations per model</h3>
       <h4>1) SAC</h4>
       <p>
-        The best SAC configuration for each environment based on the higher final return mean, can be seen in Table 5.
+        The best SAC configuration for each environment based on the highest final return mean, can be seen in Table 5.
       </p>
 
 
@@ -1156,7 +1156,7 @@ Initialize replay buffer D</code></pre>
     Table 5: Best SAC configuration for each environment, selected according to the highest final return mean. Results are averaged over three seeds.
   </figcaption>
   <p>
-        Figure 6 shows an evaluation videos of the trained agent, on the different environments, using the best configuration.
+        Figure 6 shows evaluation videos of the trained agent, on the different environments, using the best configuration.
         <figure class="video-pair">
           <div class="videos-row">
             <video controls autoplay muted loop playsinline>
@@ -1213,7 +1213,7 @@ Initialize replay buffer D</code></pre>
   </figcaption>
 </figure>
       <p>
-        Figure 7 shows an evaluation videos of the REDQ trained agent, on the different environments, using the best configuration.
+        Figure 7 shows evaluation videos of the REDQ trained agent, on the different environments, using the best configuration.
         <figure class="video-pair">
           <div class="videos-row">
             <video controls autoplay muted loop playsinline>
@@ -1387,14 +1387,14 @@ Initialize replay buffer D</code></pre>
         <h2>IV. Discussion</h2>
         <h3>A. SAC validation</h3>
         <p>
-          The validation results (see Figure 3), whoe that the custom SAC implementation achieves a similar performance compared to the Stable-Baselines3 SAC on Pendulum-v1. This suggests that the main components of the implementation such as the twin Q-networks, replay buffer and target updates are working correctly. Although small differences appear, thes can be due to implementation details and train stochasticity.
+          The validation results (see Figure 3), show that the custom SAC implementation achieves a similar performance compared to the Stable-Baselines3 SAC on Pendulum-v1. This suggests that the main components of the implementation such as the twin Q-networks, replay buffer and target updates are working correctly. Although small differences appear, these can be due to implementation details and train stochasticity.
         </p>
         <h3>B. Hyperparameter tuning</h3>
         <p>
-          The SAC hyperparameter tuning (see Table 3 and 5), shows different behaviours depending on the environment. On one hand, in PandaReachDense-v3 environment, the entropy coefficient had the strongest effect, reducing it produced the best final return (-5.59) and the lowest variability across seeds. This finding suggests that in this robotic task, a lower entropy weight helped the policy to exploit successful actions more effectively, while increasing the entropy coeddicient, worsened performance. Regarding the learning rate, it is seen that when reducing it the final return worsens, while when increasing its value with respect to the baseline, similar results are obtained. This suggests that the lower learning rate may have slowed down learning too much. In the case of the batch size and network size, small effects are seen. Decreasing the batch size slightly improved the final return, while increasing it worsened the behavior. Reducing the network size gave a result very close to the baseline, while increasing it degraded the performance. Finally, the update schedule also had a limited effect. Using smaller and more frequent updates gave a result slightly better than the baseline, while G=10 was close to the baseline but did not improved.
+          The SAC hyperparameter tuning (see Table 3 and 5), shows different behaviours depending on the environment. On one hand, in PandaReachDense-v3 environment, the entropy coefficient had the strongest effect, reducing it produced the best final return (-5.59) and the lowest variability across seeds. This finding suggests that in this robotic task, a lower entropy weight helped the policy to exploit successful actions more effectively, while increasing the entropy coefficient, worsened performance. Regarding the learning rate, it is seen that when reducing it the final return worsens, while when increasing its value with respect to the baseline, similar results are obtained. This suggests that the lower learning rate may have slowed down learning too much. In the case of the batch size and network size, small effects are seen. Decreasing the batch size slightly improved the final return, while increasing it worsened the behavior. Reducing the network size gave a result very close to the baseline, while increasing it degraded the performance. Finally, the update schedule also had a limited effect. Using smaller and more frequent updates gave a result slightly better than the baseline, while G=10 was close to the baseline but did not improved.
         </p>
         <p>
-          On the other hand, results on the Pendulum-v1 environment, show smaller differences between SAC configurations. Most final returns were close to -160, indicating that the task was less sensitive to hyperparameters. The best results were obtained with an increased network size, but the improvement over the baseline was small. Therefore, for Pendulum-v1 the baseline SAC already performed competitively, while PandaReachDense-v3 required more carefuly tuning, maybe due to the increased complexity of the problem.
+          On the other hand, results on the Pendulum-v1 environment, show smaller differences between SAC configurations. Most final returns were close to -160, indicating that the task was less sensitive to hyperparameters. The best results were obtained with an increased network size, but the improvement over the baseline was small. Therefore, for Pendulum-v1 the baseline SAC already performed competitively, while PandaReachDense-v3 required more carefully tuning, maybe due to the increased complexity of the problem.
         </p>
         <p>
           Figure 4 shows that the top SAC configurations behave differently depending on the environment. In Pendulum-v1, the three best configurations almost overlap during most of the training process. After the initial exploration phase, all curves quickly improve. This confirms that SAC is quite robust in Pendulum-v1 environment and that the tested hyperparameter changes had only a small effect.
@@ -1403,10 +1403,10 @@ Initialize replay buffer D</code></pre>
           In PandaReachDense-v3 more differences are observed. SAC-3 which uses a lower entropy coefficient achieves the best learning curve, remaining above the other configurations after the first steps. SAC-5 and SAC-9 also improve over time but they show lower final performance.
         </p>
         <p>
-          The evaluation videos in Figure 6 show the behavior learned by the best SAC agent. In Pendulum-v1, the agent performs quite well, swinging the pendulum up and keeping almost in the upright position. In PandaReachDense-v3, the performance is not that notable. The robot arm moves to the target, but the task does not appear to be solved succesfully. This supports the idea that PandaReachDense-v3 is a more challenging environment which may require longer training.
+          The evaluation videos in Figure 6 show the behavior learned by the best SAC agent. In Pendulum-v1, the agent performs quite well, swinging the pendulum up and keeping almost in the upright position. In PandaReachDense-v3, the performance is not that notable. The robot arm moves to the target, but the task does not appear to be solved successfully. This supports the idea that PandaReachDense-v3 is a more challenging environment which may require longer training.
         </p>
         <p>
-          The REDQ hyperparameter tuning results, shown in Table 4 and Table 6, reveal different behaviors depending on the environment. In PandaReachDense-v3, the baseline configuration performed poorly, with a final return of -21.01 and a very large standard deviation, indicating inestability. All the modified configurations clearly improved the results, suggesting that REDQ is quite sensitive to its hyperparameters in considerably difficult scenarios. The best result for this environment, was obtained with configuration 4, where the update-to-data ratio was reduced. This configuration obtained a final return of -6.88 with a very low standard deviation, showing better performance and a higher stability compared to the baseline. This suggests that the original REDQ UTD ratio may have been too aggresive for the environment. The learning rate reduction also produced a considerable improvement with respect the baseline, reaching a final return of -7.29. Increasing the number of sampled critics also improved the results, reaching -7.09. Overall, for PandaReachDense-v3, all modifications improved the baseline, but the most significant factor was the UTD ratio.
+          The REDQ hyperparameter tuning results, shown in Table 4 and Table 6, reveal different behaviors depending on the environment. In PandaReachDense-v3, the baseline configuration performed poorly, with a final return of -21.01 and a very large standard deviation, indicating instability. All the modified configurations clearly improved the results, suggesting that REDQ is quite sensitive to its hyperparameters in considerably difficult scenarios. The best result for this environment, was obtained with configuration 4, where the update-to-data ratio was reduced. This configuration obtained a final return of -6.88 with a very low standard deviation, showing better performance and a higher stability compared to the baseline. This suggests that the original REDQ UTD ratio may have been too aggressive for the environment. The learning rate reduction also produced a considerable improvement with respect to the baseline, reaching a final return of -7.29. Increasing the number of sampled critics also improved the results, reaching -7.09. Overall, for PandaReachDense-v3, all modifications improved the baseline, but the most significant factor was the UTD ratio.
         </p>
         <p>
           For Pendulum-v1, a different behavior is observed. The baseline achieves a reasonable final return and the differences between other configurations are smaller. The best result was obtained reducing the learning rate, achieving a final return of -142.29. However, its standard deviation was relatively high (30.01), indicating that the improvement was not completely stable across seeds. Reducing the UTD ratio also improved over the baseline, reaching -146.05 with a lower standard deviation compared to the best configuration (see REDQ-1). Reducing the ensemble size gave a result close to the baseline, while increasing the number of sampled critics clearly worsened the performance. This may indicate that using a larger subset of critics makes the target estimation less effective on this environment.
@@ -1421,14 +1421,14 @@ Initialize replay buffer D</code></pre>
           In Figure 7, the behavior of the best REDQ agents during evaluation can be observed. In Pendulum-v1, the agent is able to control the pendulum effectively and keep it close to the upright position. In contrast, in PandaReachDense-v3, the agent moves towards the target but the behavior is less precise.
         </p>
         <p>
-          In summary, SAC appears to be more robust to hyperparameter changes, especially in Pendulum-v1, while REDQ appears to be more sensitive to tuning, showing improved results when reducing the UTD ration on the PandaReachDense-v3 environment. Overall, both algorithms perform considerably in Pendulum-v1, while PandaReachDense-v3 remains more challenging.
+          In summary, SAC appears to be more robust to hyperparameter changes, especially in Pendulum-v1, while REDQ appears to be more sensitive to tuning, showing improved results when reducing the UTD ratio on the PandaReachDense-v3 environment. Overall, both algorithms perform considerably in Pendulum-v1, while PandaReachDense-v3 remains more challenging.
         </p>
         <p>
-          However, these results should be interpreted considering the computational constraints of the experiments, in which only a limited amount of hyperparameter configurations could be testes, especially for REDQ, which is more computationally expensive due to the use of multiple Q-networks and several gradient updates at each step.
+          However, these results should be interpreted considering the computational constraints of the experiments, in which only a limited amount of hyperparameter configurations could be tested, especially for REDQ, which is more computationally expensive due to the use of multiple Q-networks and several gradient updates at each step.
         </p>
         <h3>C. SAC vs REDQ</h3>
         <p>
-          Tables 7 and 8, compare the best SAC and REDQ models in terms of training and validation performance. During training, SAC obtained the best result in PandaReachDense-v3, with a final return of -5.59, while REDQ reached -6.88. In contrast, for Pendulum-v1, REDQ obtained a better training result than sac, with a final return of -142.29 and -159.38, respectively. The validation results in Table 8, show that SAC again outperformed REDQ in PandaReachDense-v3, confirming that SAC generalized better in the robotic reaching task. For Pendulum-v1, both models obtained a very similar validation performance, with SAC slightly better (-177.10) than REDQ (-180.23), even though in training REDQ achieved better performance. 
+          Tables 7 and 8, compare the best SAC and REDQ models in terms of training and validation performance. During training, SAC obtained the best result in PandaReachDense-v3, with a final return of -5.59, while REDQ reached -6.88. In contrast, for Pendulum-v1, REDQ obtained a better training result than SAC, with a final return of -142.29 and -159.38, respectively. The validation results in Table 8, show that SAC again outperformed REDQ in PandaReachDense-v3, confirming that SAC generalized better in the robotic reaching task. For Pendulum-v1, both models obtained a very similar validation performance, with SAC slightly better (-177.10) than REDQ (-180.23), even though in training REDQ achieved better performance. 
         </p>
         <p>
           Figure 8, shows that SAC achieves better training performance than REDQ in PandaReachDense-v3, obtaining a higher return after the initial exploration. REDQ improves at the beginning, but remains below SAC during most of the training.
@@ -1442,7 +1442,7 @@ Initialize replay buffer D</code></pre>
       <section id="conclusion">
         <h2>V. Conclusion</h2>
         <p>
-          Overall, both SAC and REDQ algorithms learned meaningful policies, clearly outperforming the random baseline. SAC was more robust across hyperparameter configurations and achieved the best validation performance in both environments, but specially in PandaReachDense-v3. REDQ obtained better training performance in Pendulum-v1, but this advantage was not seen in validation. Future works should explore a wider parameter search, and especially more REDQ configurations.
+          Overall, both SAC and REDQ algorithms learned meaningful policies, clearly outperforming the random baseline. SAC was more robust across hyperparameter configurations and achieved the best validation performance in both environments, but especially in PandaReachDense-v3. REDQ obtained better training performance in Pendulum-v1, but this advantage was not seen in validation. Future work should explore a wider parameter search, and especially more REDQ configurations.
         </p>
       </section>
 
