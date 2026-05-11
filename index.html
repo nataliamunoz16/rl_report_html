@@ -601,9 +601,8 @@
 
     <div class="abstract">
       <p>
-        <strong>Abstract—</strong>
-        Replace this text with your abstract. Briefly describe the goal of the project, the algorithms compared,
-        the environments used, the experimental setup, and the most relevant conclusions.
+        <strong>Abstract-</strong>
+        This project compares two off-policy actor-critic reinforcement learning algorithms, Soft Actor-Critic (SAC) and Randomized Ensembled Double Q-Learning (REDQ), on two environments: Pendulum-v1 and PandaReachDense-v3. Both algorithms were implemented trained using different hyperparameter configurations, using 3 random seeds and 100,000 training steps per experiment. The results show that both algorithms learned meaningful policies outperforming the random baseline. SAC showed a more robust behavior across experiments and achieved the best validation performance. REDQ obtained a strong training performance in Pendulum-v1 but was more sensitive to hyperparameter tuning, especially to the update-to-data ratio. Overall, the results show that SAC provides a more stable performance, while REDQ could benefit from a wider hyperparameter search.
       </p>
     </div>
 
@@ -1418,18 +1417,32 @@ Initialize replay buffer D</code></pre>
         <p>
           Figure 5 shows that the top three REDQ configurations in PandaReachDense-v3, follow a similar learning pattern, improving quickly during the first part of training and then moving to more stable values.
         </p>
-        <span style="color: red;">Explain table 4 ; Explain figure 5; Explain Figure 7; Brief comparison</span>
+        <p>
+          In Figure 7, the behavior of the best REDQ agents during evaluation can be observed. In Pendulum-v1, the agent is able to control the pendulum effectively and keep it close to the upright position. In contrast, in PandaReachDense-v3, the agent moves towards the target but the behavior is less precise.
+        </p>
+        <p>
+          In summary, SAC appears to be more robust to hyperparameter changes, especially in Pendulum-v1, while REDQ appears to be more sensitive to tuning, showing improved results when reducing the UTD ration on the PandaReachDense-v3 environment. Overall, both algorithms perform considerably in Pendulum-v1, while PandaReachDense-v3 remains more challenging.
+        </p>
+        <p>
+          However, these results should be interpreted considering the computational constraints of the experiments, in which only a limited amount of hyperparameter configurations could be testes, especially for REDQ, which is more computationally expensive due to the use of multiple Q-networks and several gradient updates at each step.
+        </p>
         <h3>C. SAC vs REDQ</h3>
-        <span style="color: red;">Explain table 7 ; Explain figure 8; Explain Table 8</span>
+        <p>
+          Tables 7 and 8, compare the best SAC and REDQ models in terms of training and validation performance. During training, SAC obtained the best result in PandaReachDense-v3, with a final return of -5.59, while REDQ reached -6.88. In contrast, for Pendulum-v1, REDQ obtained a better training result than sac, with a final return of -142.29 and -159.38, respectively. The validation results in Table 8, show that SAC again outperformed REDQ in PandaReachDense-v3, confirming that SAC generalized better in the robotic reaching task. For Pendulum-v1, both models obtained a very similar validation performance, with SAC slightly better (-177.10) than REDQ (-180.23), even though in training REDQ achieved better performance. 
+        </p>
+        <p>
+          Figure 8, shows that SAC achieves better training performance than REDQ in PandaReachDense-v3, obtaining a higher return after the initial exploration. REDQ improves at the beginning, but remains below SAC during most of the training.
+        </p>
         <h3>D. Random Baseline</h3>
-        <span style="color: red;">Compare Table 8 vs Table 9</span>
+        <p>
+          In Table 8 it can be observed that the trained SAC and REDQ agents clearly outperform the random baseline reported in Table 9. In PandaReachDense-v3, both models obtained higher returns than the random policy, with SAC obtaining the best validation result. In Pendulum-v1, the difference is even larger, with the random baseline obtaining a poorer return compared to both trained agents. This confirms that both agents learned policies that are more meaningful than random behavior.
+        </p>
       </section>
 
       <section id="conclusion">
         <h2>V. Conclusion</h2>
         <p>
-          Summarize the main findings of the project. State which algorithm performed better in each environment and
-          what could be improved in future work.
+          Overall, both SAC and REDQ algorithms learned meaningful policies, clearly outperforming the random baseline. SAC was more robust across hyperparameter configurations and achieved the best validation performance in both environments, but specially in PandaReachDense-v3. REDQ obtained better training performance in Pendulum-v1, but this advantage was not seen in validation. Future works should explore a wider parameter search, and especially more REDQ configurations.
         </p>
       </section>
 
@@ -1462,7 +1475,7 @@ Initialize replay buffer D</code></pre>
             pendulum.html, n.d., retrieved May 8, 2026.
           </li>
           <li>
-            panda-gym, “Environments — panda-gym v3.0.8 documentation,”
+            panda-gym, “Environments - panda-gym v3.0.8 documentation,”
             https://panda-gym.readthedocs.io/en/latest/usage/environments.
             html, n.d., retrieved May 8, 2026.
           </li>
@@ -1470,7 +1483,7 @@ Initialize replay buffer D</code></pre>
             Units/en/unit6/hands-on.Mdx at main · huggingface/deep-rl-class. (n.d.).
           </li>
           <li>
-            SAC — Stable Baselines3 2.9.0a2 documentation. (n.d.). Readthedocs.Io. Retrieved May 9, 2026, from https://stable-baselines3.readthedocs.io/en/master/modules/sac.html
+            SAC - Stable Baselines3 2.9.0a2 documentation. (n.d.). Readthedocs.Io. Retrieved May 9, 2026, from https://stable-baselines3.readthedocs.io/en/master/modules/sac.html
           </li>
         </ol>
       </section>
